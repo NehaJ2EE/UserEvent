@@ -1,28 +1,24 @@
 pipeline {
-      agent any
-      
-      stages {
-          stage('Compile Stage') {
-          
-               steps {
-               withMaven(maven : 'maven_3_6_3') {
-                  sh 'mvn clean compile'
-                 }  
-               }
-             }
-             stage ('Testing Stage') {
-              steps {
-               withMaven(maven : 'maven_3_6_3') {
-                  sh 'mvn test'
-                 }  
-               }
-             }
-            stage('Deployment Stage') {
-              steps {
-               withMaven(maven : 'maven_3_6_3') {
-                  sh 'mvn deploy'
-                 }  
-               }
-             }
-     }
-}     
+
+	agent any
+	tools {
+		maven 'maven_3_6_3'
+	}
+	stages {
+		stage ('Compile Stage') {
+			steps {
+				bat 'mvn clean compile'
+			}
+		}
+		stage ('Sonarqube deployement Stage') {
+			steps {
+				bat 'mvn sonar:sonar'
+			}
+		}
+		stage ('Test') {
+			steps {
+				bat 'mvn test'
+			}
+		}
+	}
+}
